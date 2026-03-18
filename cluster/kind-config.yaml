@@ -1,0 +1,18 @@
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+name: workplace-platform
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30543   # PostgreSQL NodePort
+        hostPort: 5433
+        protocol: TCP
+      - containerPort: 30474   # Neo4j Browser NodePort
+        hostPort: 7475
+        protocol: TCP
+      - containerPort: 30687   # Neo4j Bolt NodePort
+        hostPort: 7688
+        protocol: TCP
+      - containerPort: 30800   # FastAPI NodePort (later)
+        hostPort: 8000
+        protocol: TCP
