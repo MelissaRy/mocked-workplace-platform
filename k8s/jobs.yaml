@@ -1,0 +1,60 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hr-ingestion
+  namespace: workplace
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: hr-ingestion
+          image: workplace-ingestion:latest
+          imagePullPolicy: Never
+          env:
+            - name: WORKER
+              value: hr
+          envFrom:
+            - configMapRef:
+                name: platform-config
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mdm-ingestion
+  namespace: workplace
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: mdm-ingestion
+          image: workplace-ingestion:latest
+          imagePullPolicy: Never
+          env:
+            - name: WORKER
+              value: mdm
+          envFrom:
+            - configMapRef:
+                name: platform-config
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: itsm-ingestion
+  namespace: workplace
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: itsm-ingestion
+          image: workplace-ingestion:latest
+          imagePullPolicy: Never
+          env:
+            - name: WORKER
+              value: itsm
+          envFrom:
+            - configMapRef:
+                name: platform-config

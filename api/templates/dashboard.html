@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workplace Fleet Health</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0d1117;
+    --surface:  #161b22;
+    --border:   #30363d;
+    --text:     #e6edf3;
+    --muted:    #8b949e;
+    --blue:     #58a6ff;
+    --green:    #3fb950;
+    --amber:    #d29922;
+    --red:      #f85149;
+    --purple:   #bc8cff;
+    --cyan:     #39d353;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .header-left p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 500;
+  }
+  .live-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(1.3); }
+  }
+  .header-date {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── Layout ── */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tag-neo4j  { background: rgba(188,140,255,.15); color: var(--purple); border: 1px solid rgba(188,140,255,.3); }
+  .tag-pg     { background: rgba(88,166,255,.1);   color: var(--blue);   border: 1px solid rgba(88,166,255,.25); }
+
+  /* ── Stat grid ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color .2s;
+  }
+  .stat-card:hover { border-color: var(--blue); }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.1;
+  }
+  .stat-value.green  { color: var(--green); }
+  .stat-value.amber  { color: var(--amber); }
+  .stat-value.red    { color: var(--red); }
+  .stat-value.purple { color: var(--purple); }
+  .stat-sub {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ── 2-col grid ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* ── Chart containers ── */
+  .chart-wrap { position: relative; height: 240px; }
+  .chart-wrap-sm { position: relative; height: 180px; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 12px 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 12px 10px 0;
+    border-bottom: 1px solid rgba(48,54,61,.5);
+    font-size: 13px;
+    color: var(--text);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,.02); }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  .badge-critical { background: rgba(188,140,255,.2); color: var(--purple); }
+  .badge-high     { background: rgba(248, 81,73,.18); color: var(--red); }
+  .badge-medium   { background: rgba(210,153,34,.18); color: var(--amber); }
+  .badge-low      { background: rgba(88,166,255,.15); color: var(--blue); }
+  .badge-open     { background: rgba(248,81,73,.1);  color: var(--red); }
+  .badge-progress { background: rgba(210,153,34,.1); color: var(--amber); }
+  .badge-resolved { background: rgba(63,185,80,.1);  color: var(--green); }
+  .badge-healthy  { background: rgba(63,185,80,.15); color: var(--green); }
+
+  /* ── Risk score bar ── */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .score-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .score-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width .4s ease;
+  }
+  .score-num { font-size: 12px; font-weight: 600; width: 18px; text-align: right; }
+
+  /* ── Skeleton shimmer ── */
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface) 25%, var(--border) 50%, var(--surface) 75%);
+    background-size: 400% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 6px;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+  .skel-val { height: 32px; width: 80px; margin: 4px 0; }
+  .skel-sub { height: 12px; width: 60px; }
+
+  /* ── Section label ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* ── Compliance bar ── */
+  .compliance-bar {
+    display: flex;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .comp-seg { transition: width .4s ease; }
+
+  /* ── Risk tier pills ── */
+  .tier-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .tier-pill {
+    text-align: center;
+    padding: 14px 8px;
+    border-radius: 8px;
+    border: 1px solid;
+  }
+  .tier-pill .tier-count { font-size: 24px; font-weight: 700; }
+  .tier-pill .tier-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+  .tier-healthy { border-color: rgba(63,185,80,.3);  background: rgba(63,185,80,.05);  color: var(--green); }
+  .tier-low     { border-color: rgba(88,166,255,.3); background: rgba(88,166,255,.05); color: var(--blue); }
+  .tier-medium  { border-color: rgba(210,153,34,.3); background: rgba(210,153,34,.05); color: var(--amber); }
+  .tier-high    { border-color: rgba(248,81,73,.3);  background: rgba(248,81,73,.05);  color: var(--red); }
+
+  /* ── Status filters  ── */
+  .db-pills {
+    display: flex;
+    gap: 8px;
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+  .db-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: rgba(255,255,255,.02);
+  }
+  .db-pill .dot { width: 6px; height: 6px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Workplace Fleet Health</h1>
+    <p>Real-time IT operations dashboard &mdash; PostgreSQL + Neo4j</p>
+  </div>
+  <div class="header-right">
+    <div class="db-pills">
+      <div class="db-pill"><div class="dot" style="background:#3fb950"></div>PostgreSQL</div>
+      <div class="db-pill"><div class="dot" style="background:#bc8cff"></div>Neo4j</div>
+    </div>
+    <div class="live-badge"><div class="live-dot"></div>Live</div>
+    <div class="header-date" id="hdr-date"></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── Stat Cards ── -->
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-card"><div class="stat-label">Total Employees</div><div class="skeleton skel-val"></div></div>
+    <div class="stat-card"><div class="stat-label">Total Devices</div><div class="skeleton skel-val"></div></div>
+    <div class="stat-card"><div class="stat-label">Encrypted</div><div class="skeleton skel-val"></div></div>
+    <div class="stat-card"><div class="stat-label">Antivirus OK</div><div class="skeleton skel-val"></div></div>
+    <div class="stat-card"><div class="stat-label">Avg Patches Missing</div><div class="skeleton skel-val"></div></div>
+    <div class="stat-card"><div class="stat-label">Active Incidents</div><div class="skeleton skel-val"></div></div>
+    <div class="stat-card"><div class="stat-label">Critical Incidents</div><div class="skeleton skel-val"></div></div>
+    <div class="stat-card"><div class="stat-label">Training Expired</div><div class="skeleton skel-val"></div></div>
+    <div class="stat-card"><div class="stat-label">Warranty Expired</div><div class="skeleton skel-val"></div></div>
+  </div>
+
+  <!-- ── Fleet Breakdown ── -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Fleet by Status</div>
+        <div class="tag tag-pg">PostgreSQL</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart-status"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">OS Distribution</div>
+        <div class="tag tag-pg">PostgreSQL</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart-os"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── Incident Trend ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Incident Trend — Last 12 Months</div>
+      <div class="tag tag-pg">PostgreSQL</div>
+    </div>
+    <div class="chart-wrap"><canvas id="chart-trend"></canvas></div>
+  </div>
+
+  <!-- ── Security ── -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Device Risk Tiers</div>
+        <div class="tag tag-pg">PostgreSQL</div>
+      </div>
+      <div class="tier-grid" id="tier-grid">
+        <div class="tier-pill tier-healthy"><div class="tier-count skeleton skel-val" style="width:40px;height:28px;margin:auto"></div><div class="tier-label">Healthy</div></div>
+        <div class="tier-pill tier-low"><div class="tier-count skeleton skel-val" style="width:40px;height:28px;margin:auto"></div><div class="tier-label">Low</div></div>
+        <div class="tier-pill tier-medium"><div class="tier-count skeleton skel-val" style="width:40px;height:28px;margin:auto"></div><div class="tier-label">Medium</div></div>
+        <div class="tier-pill tier-high"><div class="tier-count skeleton skel-val" style="width:40px;height:28px;margin:auto"></div><div class="tier-label">High</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-title" style="margin-bottom:12px">Incidents by Category</div>
+      <div class="chart-wrap-sm"><canvas id="chart-cat"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Training Compliance</div>
+        <div class="tag tag-pg">PostgreSQL</div>
+      </div>
+      <div id="compliance-section">
+        <div class="skeleton" style="height:40px;border-radius:6px;margin-bottom:8px"></div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-title" style="margin-bottom:12px">Worst Compliance — By Course</div>
+      <div id="worst-courses"></div>
+    </div>
+  </div>
+
+  <!-- ── At-Risk Devices ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">At-Risk Devices — Top 10</div>
+      <div class="tag tag-pg">PostgreSQL</div>
+    </div>
+    <table id="tbl-risk">
+      <thead>
+        <tr>
+          <th>Device</th><th>Employee</th><th>Risk Score</th><th>Tier</th>
+        </tr>
+      </thead>
+      <tbody><tr><td colspan="4" style="color:var(--muted)">Loading…</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- ── Neo4j Insights ── -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Open Incidents by Department</div>
+        <div class="tag tag-neo4j">Neo4j Graph</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart-dept"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">App Exposure — Devices with Open Incidents</div>
+        <div class="tag tag-neo4j">Neo4j Graph</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart-app"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── Recent Incidents ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Recent Open Incidents</div>
+      <div class="tag tag-pg">PostgreSQL</div>
+    </div>
+    <table id="tbl-incidents">
+      <thead>
+        <tr>
+          <th>ID</th><th>Type</th><th>Severity</th><th>Status</th><th>Employee</th><th>Device</th><th>Opened</th>
+        </tr>
+      </thead>
+      <tbody><tr><td colspan="7" style="color:var(--muted)">Loading…</td></tr></tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+// ── helpers ────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const pct = n => n.toFixed(1) + '%';
+const COLORS = {
+  blue:'#58a6ff', green:'#3fb950', amber:'#d29922',
+  red:'#f85149', purple:'#bc8cff', cyan:'#39d353',
+  muted:'#8b949e'
+};
+const PALETTE = ['#58a6ff','#3fb950','#bc8cff','#d29922','#f85149','#39d353','#e3b341','#fd8c73','#79c0ff','#d2a8ff'];
+
+function chartDefaults() {
+  Chart.defaults.color = '#8b949e';
+  Chart.defaults.borderColor = '#30363d';
+  Chart.defaults.font.family = 'Inter';
+  Chart.defaults.font.size = 12;
+}
+chartDefaults();
+
+function baseOptions(extra={}) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { backgroundColor:'#161b22', borderColor:'#30363d', borderWidth:1, titleColor:'#e6edf3', bodyColor:'#8b949e' }},
+    ...extra
+  };
+}
+
+function hbar(ctx, labels, data, colors) {
+  return new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ data, backgroundColor: colors || PALETTE, borderRadius: 4, borderSkipped: false }]},
+    options: { ...baseOptions(), indexAxis: 'y', scales: { x: { grid: { color:'#30363d' }, ticks: { color:'#8b949e' }}, y: { grid: { display:false }, ticks: { color:'#e6edf3' }}}}
+  });
+}
+
+// ── header date ────────────────────────────────────────────────────────────
+function updateDate() {
+  $('hdr-date').textContent = new Date().toUTCString().slice(0,25) + ' UTC';
+}
+updateDate();
+
+// ── overview ───────────────────────────────────────────────────────────────
+async function loadOverview() {
+  const d = await fetch('/api/overview').then(r=>r.json());
+  $('stat-grid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Total Employees</div>
+      <div class="stat-value">${d.total_employees.toLocaleString()}</div>
+      <div class="stat-sub">${d.total_devices.toLocaleString()} devices</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Managed Devices</div>
+      <div class="stat-value green">${pct(d.managed_pct)}</div>
+      <div class="stat-sub">MDM enrolled</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Disk Encrypted</div>
+      <div class="stat-value ${d.encrypted_pct >= 95 ? 'green' : d.encrypted_pct >= 80 ? 'amber' : 'red'}">${pct(d.encrypted_pct)}</div>
+      <div class="stat-sub">of fleet</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Antivirus OK</div>
+      <div class="stat-value ${d.antivirus_ok_pct >= 90 ? 'green' : d.antivirus_ok_pct >= 70 ? 'amber' : 'red'}">${pct(d.antivirus_ok_pct)}</div>
+      <div class="stat-sub">of devices</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Patches Missing</div>
+      <div class="stat-value ${d.avg_patches_missing <= 1 ? 'green' : d.avg_patches_missing <= 3 ? 'amber' : 'red'}">${d.avg_patches_missing}</div>
+      <div class="stat-sub">per device</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Active Incidents</div>
+      <div class="stat-value ${d.active_incidents === 0 ? 'green' : d.active_incidents < 30 ? 'amber' : 'red'}">${d.active_incidents}</div>
+      <div class="stat-sub">open / in-progress</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Critical Incidents</div>
+      <div class="stat-value ${d.critical_incidents === 0 ? 'green' : 'purple'}">${d.critical_incidents}</div>
+      <div class="stat-sub">unresolved</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Training Expired</div>
+      <div class="stat-value ${d.training_expired_pct < 10 ? 'green' : d.training_expired_pct < 25 ? 'amber' : 'red'}">${pct(d.training_expired_pct)}</div>
+      <div class="stat-sub">of certifications</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Warranty Expired</div>
+      <div class="stat-value ${d.warranty_expired_count === 0 ? 'green' : 'amber'}">${d.warranty_expired_count}</div>
+      <div class="stat-sub">devices</div>
+    </div>
+  `;
+}
+
+// ── fleet charts ───────────────────────────────────────────────────────────
+async function loadFleet() {
+  const [statusData, osData] = await Promise.all([
+    fetch('/api/fleet/by-status').then(r=>r.json()),
+    fetch('/api/fleet/by-os').then(r=>r.json()),
+  ]);
+
+  const statusColors = statusData.data.map(d => {
+    if (d.status === 'Active') return COLORS.green;
+    if (d.status === 'Warranty Expired') return COLORS.amber;
+    if (d.status === 'In Repair') return COLORS.red;
+    return COLORS.muted;
+  });
+
+  new Chart($('chart-status'), {
+    type: 'doughnut',
+    data: {
+      labels: statusData.data.map(d=>d.status),
+      datasets: [{ data: statusData.data.map(d=>d.count), backgroundColor: statusColors, borderColor: '#161b22', borderWidth: 2 }]
+    },
+    options: {
+      ...baseOptions(),
+      cutout: '65%',
+      plugins: {
+        legend: { display: true, position: 'right', labels: { color:'#e6edf3', boxWidth:12, padding:12 }},
+        tooltip: { backgroundColor:'#161b22', borderColor:'#30363d', borderWidth:1, titleColor:'#e6edf3', bodyColor:'#8b949e' }
+      }
+    }
+  });
+
+  hbar($('chart-os'), osData.data.map(d=>d.os), osData.data.map(d=>d.count), PALETTE);
+}
+
+// ── incident trend ─────────────────────────────────────────────────────────
+async function loadTrend() {
+  const d = await fetch('/api/incidents/trend').then(r=>r.json());
+  new Chart($('chart-trend'), {
+    type: 'line',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.counts,
+        borderColor: COLORS.blue,
+        backgroundColor: 'rgba(88,166,255,0.08)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: COLORS.blue,
+        pointBorderColor: '#161b22',
+        pointBorderWidth: 2,
+      }]
+    },
+    options: {
+      ...baseOptions(),
+      scales: {
+        x: { grid: { color:'#30363d' }, ticks: { color:'#8b949e' }},
+        y: { grid: { color:'#30363d' }, ticks: { color:'#8b949e' }, beginAtZero: true }
+      }
+    }
+  });
+}
+
+// ── security ───────────────────────────────────────────────────────────────
+async function loadSecurity() {
+  const [risk, compliance, incSummary] = await Promise.all([
+    fetch('/api/security/risk-summary').then(r=>r.json()),
+    fetch('/api/security/compliance').then(r=>r.json()),
+    fetch('/api/incidents/summary').then(r=>r.json()),
+  ]);
+
+  // Tier pills
+  $('tier-grid').innerHTML = `
+    <div class="tier-pill tier-healthy"><div class="tier-count">${risk.healthy}</div><div class="tier-label">Healthy</div></div>
+    <div class="tier-pill tier-low"><div class="tier-count">${risk.low}</div><div class="tier-label">Low</div></div>
+    <div class="tier-pill tier-medium"><div class="tier-count">${risk.medium}</div><div class="tier-label">Medium</div></div>
+    <div class="tier-pill tier-high"><div class="tier-count">${risk.high}</div><div class="tier-label">High Risk</div></div>
+  `;
+
+  // Incident by category chart
+  const cats = incSummary.by_category;
+  hbar($('chart-cat'), cats.map(c=>c.category), cats.map(c=>c.count), PALETTE);
+
+  // Compliance bar
+  const total = compliance.current + compliance.expiring_soon + compliance.expired;
+  const w = v => (v/total*100).toFixed(1) + '%';
+  $('compliance-section').innerHTML = `
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+      <span style="font-size:22px;font-weight:700;color:${compliance.compliance_rate >= 80 ? 'var(--green)' : 'var(--amber)'}">${compliance.compliance_rate}%</span>
+      <span style="font-size:12px;color:var(--muted);align-self:flex-end">compliance rate</span>
+    </div>
+    <div class="compliance-bar">
+      <div class="comp-seg" style="width:${w(compliance.current)};background:var(--green)"></div>
+      <div class="comp-seg" style="width:${w(compliance.expiring_soon)};background:var(--amber)"></div>
+      <div class="comp-seg" style="width:${w(compliance.expired)};background:var(--red)"></div>
+    </div>
+    <div style="display:flex;gap:16px;font-size:11px;color:var(--muted)">
+      <span><span style="color:var(--green)">●</span> Current ${compliance.current.toLocaleString()}</span>
+      <span><span style="color:var(--amber)">●</span> Expiring ${compliance.expiring_soon.toLocaleString()}</span>
+      <span><span style="color:var(--red)">●</span> Expired ${compliance.expired.toLocaleString()}</span>
+    </div>
+  `;
+
+  // Worst courses
+  $('worst-courses').innerHTML = compliance.worst_courses.map(c => `
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:12px;color:var(--text)">${c.course}</span>
+        <span style="font-size:12px;font-weight:600;color:${c.expired_pct > 30 ? 'var(--red)' : 'var(--amber)'}">${c.expired_pct}%</span>
+      </div>
+      <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${c.expired_pct}%;background:${c.expired_pct > 30 ? 'var(--red)' : 'var(--amber)'};border-radius:3px"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // At-risk table
+  const tbody = $('tbl-risk').querySelector('tbody');
+  tbody.innerHTML = risk.critical_devices.map(d => {
+    const maxScore = 11;
+    const fillColor = d.score >= 7 ? 'var(--red)' : d.score >= 4 ? 'var(--amber)' : 'var(--blue)';
+    return `<tr>
+      <td style="font-family:monospace;font-size:12px">${d.hostname}</td>
+      <td>${d.employee}</td>
+      <td>
+        <div class="score-bar">
+          <div class="score-track"><div class="score-fill" style="width:${(d.score/maxScore*100).toFixed(0)}%;background:${fillColor}"></div></div>
+          <div class="score-num" style="color:${fillColor}">${d.score}</div>
+        </div>
+      </td>
+      <td><span class="badge badge-${d.tier}">${d.tier}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── graph insights ─────────────────────────────────────────────────────────
+async function loadGraph() {
+  const [dept, app] = await Promise.all([
+    fetch('/api/graph/dept-risk').then(r=>r.json()),
+    fetch('/api/graph/app-exposure').then(r=>r.json()),
+  ]);
+
+  hbar($('chart-dept'),
+    dept.departments.map(d=>d.dept),
+    dept.departments.map(d=>d.open_incidents),
+    dept.departments.map((_, i) => PALETTE[i % PALETTE.length])
+  );
+
+  hbar($('chart-app'),
+    app.apps.map(a=>a.app),
+    app.apps.map(a=>a.affected_devices),
+    app.apps.map((_, i) => PALETTE[i % PALETTE.length])
+  );
+}
+
+// ── recent incidents ───────────────────────────────────────────────────────
+async function loadRecentIncidents() {
+  const d = await fetch('/api/incidents/recent').then(r=>r.json());
+  const sevClass = s => ({ Critical:'critical', High:'high', Medium:'medium', Low:'low' }[s] || 'low');
+  const stClass  = s => ({ Open:'open', 'In Progress':'progress', Resolved:'resolved' }[s] || 'low');
+  const tbody = $('tbl-incidents').querySelector('tbody');
+  if (!d.incidents.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">No open incidents</td></tr>';
+    return;
+  }
+  tbody.innerHTML = d.incidents.map(i => `
+    <tr>
+      <td style="font-family:monospace;font-size:12px;color:var(--blue)">${i.id}</td>
+      <td>${i.type}</td>
+      <td><span class="badge badge-${sevClass(i.severity)}">${i.severity}</span></td>
+      <td><span class="badge badge-${stClass(i.status)}">${i.status}</span></td>
+      <td>${i.employee}</td>
+      <td style="font-family:monospace;font-size:12px;color:var(--muted)">${i.hostname}</td>
+      <td style="color:var(--muted)">${i.opened_date}</td>
+    </tr>
+  `).join('');
+}
+
+// ── init ───────────────────────────────────────────────────────────────────
+async function init() {
+  await Promise.all([
+    loadOverview(),
+    loadFleet(),
+    loadTrend(),
+    loadSecurity(),
+    loadGraph(),
+    loadRecentIncidents(),
+  ]);
+}
+
+init();
+setInterval(init, 60000);
+setInterval(updateDate, 1000);
+</script>
+</body>
+</html>
