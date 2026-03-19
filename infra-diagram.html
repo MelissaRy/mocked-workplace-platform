@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Workplace Platform — Infrastructure Diagram</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d1117;
+    color: #e6edf3;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 40px 32px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #e6edf3;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #8b949e;
+    margin-bottom: 40px;
+  }
+
+  svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 1100px;
+    width: 100%;
+    height: auto;
+  }
+
+  /* legend */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #8b949e;
+  }
+  .leg-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Workplace Data Platform — Infrastructure</h1>
+<p class="subtitle">kind/Kubernetes · PostgreSQL · Neo4j · FastAPI · Python Workers</p>
+
+<svg viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <!-- Arrow markers -->
+    <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#58a6ff"/>
+    </marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#3fb950"/>
+    </marker>
+    <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#bc8cff"/>
+    </marker>
+    <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#d29922"/>
+    </marker>
+    <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#8b949e"/>
+    </marker>
+    <!-- Gradients -->
+    <linearGradient id="grad-host" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a2233"/>
+      <stop offset="100%" stop-color="#161b22"/>
+    </linearGradient>
+    <linearGradient id="grad-cluster" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1e2e"/>
+      <stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+    <linearGradient id="grad-ns" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#141e2e"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HOST MACHINE
+  ══════════════════════════════════════════════════════════════ -->
+  <rect x="10" y="10" width="1080" height="700" rx="14" fill="url(#grad-host)" stroke="#30363d" stroke-width="1.5"/>
+  <text x="30" y="36" font-size="12" font-weight="600" fill="#58a6ff" text-anchor="start" letter-spacing="1">HOST MACHINE</text>
+  <text x="30" y="52" font-size="11" fill="#8b949e">Melissa's laptop · Linux · Docker · kubectl</text>
+
+  <!-- Port mapping pills (host side) -->
+  <g font-size="10" fill="#8b949e">
+    <rect x="30" y="62" width="90" height="18" rx="4" fill="#1c2433" stroke="#30363d" stroke-width="1"/>
+    <text x="75" y="75" text-anchor="middle" fill="#8b949e">:5433 (PG)</text>
+
+    <rect x="130" y="62" width="110" height="18" rx="4" fill="#1c2433" stroke="#30363d" stroke-width="1"/>
+    <text x="185" y="75" text-anchor="middle" fill="#8b949e">:7475 (Neo4j UI)</text>
+
+    <rect x="250" y="62" width="120" height="18" rx="4" fill="#1c2433" stroke="#30363d" stroke-width="1"/>
+    <text x="310" y="75" text-anchor="middle" fill="#8b949e">:7688 (Neo4j Bolt)</text>
+
+    <rect x="380" y="62" width="110" height="18" rx="4" fill="#1c2433" stroke="#30363d" stroke-width="1"/>
+    <text x="435" y="75" text-anchor="middle" fill="#58a6ff">:8000 (Dashboard)</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       KIND CLUSTER
+  ══════════════════════════════════════════════════════════════ -->
+  <rect x="30" y="92" width="1040" height="600" rx="12" fill="url(#grad-cluster)" stroke="#1f6feb" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="52" y="114" font-size="12" font-weight="600" fill="#1f6feb" letter-spacing="1">KIND CLUSTER · workplace-platform</text>
+
+  <!-- Control Plane badge -->
+  <rect x="850" y="98" width="190" height="22" rx="6" fill="#1c2f4a" stroke="#1f6feb" stroke-width="1"/>
+  <text x="945" y="113" text-anchor="middle" font-size="10" fill="#58a6ff">control-plane node</text>
+
+  <!-- ── NodePort service mappings ── -->
+  <rect x="52" y="124" width="980" height="30" rx="6" fill="#161f30" stroke="#30363d" stroke-width="1"/>
+  <text x="72" y="143" font-size="10" fill="#8b949e">NodePorts:  </text>
+  <text x="145" y="143" font-size="10" fill="#3fb950">30543→postgres:5432</text>
+  <text x="310" y="143" font-size="10" fill="#bc8cff">30474→neo4j:7474  ·  30687→neo4j:7687</text>
+  <text x="575" y="143" font-size="10" fill="#58a6ff">30800→api:8000</text>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       NAMESPACE: workplace
+  ══════════════════════════════════════════════════════════════ -->
+  <rect x="52" y="168" width="980" height="506" rx="10" fill="url(#grad-ns)" stroke="#388bfd44" stroke-width="1.5"/>
+  <text x="74" y="188" font-size="11" font-weight="600" fill="#388bfd" letter-spacing="0.8">NAMESPACE: workplace</text>
+
+  <!-- ── ConfigMap ── -->
+  <rect x="74" y="198" width="200" height="80" rx="8" fill="#1c2433" stroke="#d2992244" stroke-width="1.5"/>
+  <text x="174" y="217" text-anchor="middle" font-size="11" font-weight="700" fill="#d29922">⚙ ConfigMap</text>
+  <text x="174" y="232" text-anchor="middle" font-size="10" fill="#e6edf3">platform-config</text>
+  <line x1="84" y1="240" x2="264" y2="240" stroke="#30363d" stroke-width="1"/>
+  <text x="84" y="254" font-size="9" fill="#8b949e">PG_DSN · NEO4J_URI</text>
+  <text x="84" y="267" font-size="9" fill="#8b949e">NEO4J_USER · NEO4J_PASS</text>
+  <text x="84" y="280" font-size="9" fill="#8b949e">N_EMPLOYEES = 1000</text>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       POSTGRESQL
+  ══════════════════════════════════════════════════════════════ -->
+  <rect x="74" y="300" width="200" height="130" rx="8" fill="#1c2433" stroke="#3fb95055" stroke-width="2"/>
+  <rect x="74" y="300" width="200" height="28" rx="8" fill="#1e3a2a"/>
+  <rect x="74" y="316" width="200" height="12" fill="#1e3a2a"/>
+  <text x="174" y="319" text-anchor="middle" font-size="11" font-weight="700" fill="#3fb950">PostgreSQL</text>
+  <text x="174" y="334" text-anchor="middle" font-size="9" fill="#8b949e">bitnami/postgresql · StatefulSet</text>
+  <text x="174" y="348" text-anchor="middle" font-size="9" fill="#8b949e">postgres-postgresql.workplace:5432</text>
+  <line x1="84" y1="355" x2="264" y2="355" stroke="#30363d" stroke-width="1"/>
+  <text x="84" y="370" font-size="9" fill="#8b949e">● employees     1,000</text>
+  <text x="84" y="383" font-size="9" fill="#8b949e">● laptops        1,000</text>
+  <text x="84" y="396" font-size="9" fill="#8b949e">● incidents         873</text>
+  <text x="84" y="409" font-size="9" fill="#8b949e">● laptop_apps   11,002</text>
+  <text x="84" y="422" font-size="9" fill="#8b949e">● training        7,419</text>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       NEO4J
+  ══════════════════════════════════════════════════════════════ -->
+  <rect x="74" y="450" width="200" height="200" rx="8" fill="#1c2433" stroke="#bc8cff55" stroke-width="2"/>
+  <rect x="74" y="450" width="200" height="28" rx="8" fill="#2a1e3a"/>
+  <rect x="74" y="466" width="200" height="12" fill="#2a1e3a"/>
+  <text x="174" y="469" text-anchor="middle" font-size="11" font-weight="700" fill="#bc8cff">Neo4j</text>
+  <text x="174" y="484" text-anchor="middle" font-size="9" fill="#8b949e">neo4j/neo4j · community · StatefulSet</text>
+  <text x="174" y="498" text-anchor="middle" font-size="9" fill="#8b949e">neo4j.workplace:7687 (bolt)</text>
+  <line x1="84" y1="505" x2="264" y2="505" stroke="#30363d" stroke-width="1"/>
+  <text x="84" y="520" font-size="9" fill="#8b949e">Nodes:</text>
+  <text x="84" y="533" font-size="9" fill="#bc8cff">  Employee · Laptop · Department</text>
+  <text x="84" y="546" font-size="9" fill="#bc8cff">  Office · Application · Incident</text>
+  <text x="84" y="562" font-size="9" fill="#8b949e">Relationships:</text>
+  <text x="84" y="575" font-size="9" fill="#bc8cff">  WORKS_IN · ASSIGNED_TO</text>
+  <text x="84" y="588" font-size="9" fill="#bc8cff">  HAS_INSTALLED · HAD_INCIDENT</text>
+  <text x="84" y="601" font-size="9" fill="#bc8cff">  BASED_IN</text>
+  <text x="84" y="617" font-size="9" fill="#8b949e">Helm chart · PVC storage</text>
+  <text x="84" y="630" font-size="9" fill="#8b949e">Browser UI → NodePort 30474</text>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       INGESTION WORKERS
+  ══════════════════════════════════════════════════════════════ -->
+  <!-- Section label -->
+  <text x="360" y="213" text-anchor="middle" font-size="10" font-weight="600" fill="#8b949e" letter-spacing="0.8">KUBERNETES JOBS · workplace-ingestion:latest (imagePullPolicy: Never)</text>
+
+  <!-- HR Worker -->
+  <rect x="290" y="222" width="200" height="140" rx="8" fill="#1c2433" stroke="#58a6ff44" stroke-width="1.5"/>
+  <rect x="290" y="222" width="200" height="26" rx="8" fill="#1a2a3f"/>
+  <rect x="290" y="236" width="200" height="12" fill="#1a2a3f"/>
+  <text x="390" y="239" text-anchor="middle" font-size="11" font-weight="700" fill="#58a6ff">HR Worker</text>
+  <text x="390" y="253" text-anchor="middle" font-size="9" fill="#8b949e">WORKER=hr · Job (Complete)</text>
+  <line x1="300" y1="260" x2="480" y2="260" stroke="#30363d" stroke-width="1"/>
+  <text x="300" y="275" font-size="9" fill="#8b949e">→ departments (15)</text>
+  <text x="300" y="288" font-size="9" fill="#8b949e">→ employees (1,000)</text>
+  <text x="300" y="301" font-size="9" fill="#8b949e">→ training_courses (20)</text>
+  <text x="300" y="314" font-size="9" fill="#8b949e">→ employee_training (7,419)</text>
+  <text x="300" y="327" font-size="9" fill="#8b949e">→ bootstrap_schema()</text>
+  <rect x="300" y="337" width="60" height="16" rx="4" fill="#1e3a2a"/>
+  <text x="330" y="349" text-anchor="middle" font-size="9" fill="#3fb950">✓ Done</text>
+
+  <!-- MDM Worker -->
+  <rect x="510" y="222" width="200" height="140" rx="8" fill="#1c2433" stroke="#58a6ff44" stroke-width="1.5"/>
+  <rect x="510" y="222" width="200" height="26" rx="8" fill="#1a2a3f"/>
+  <rect x="510" y="236" width="200" height="12" fill="#1a2a3f"/>
+  <text x="610" y="239" text-anchor="middle" font-size="11" font-weight="700" fill="#58a6ff">MDM Worker</text>
+  <text x="610" y="253" text-anchor="middle" font-size="9" fill="#8b949e">WORKER=mdm · Job (Complete)</text>
+  <line x1="520" y1="260" x2="700" y2="260" stroke="#30363d" stroke-width="1"/>
+  <text x="520" y="275" font-size="9" fill="#8b949e">→ applications (24)</text>
+  <text x="520" y="288" font-size="9" fill="#8b949e">→ laptops + metrics (1,000)</text>
+  <text x="520" y="301" font-size="9" fill="#8b949e">→ laptop_apps (11,002)</text>
+  <text x="520" y="314" font-size="9" fill="#bc8cff">→ Neo4j full graph sync</text>
+  <text x="520" y="327" font-size="9" fill="#8b949e">   (DETACH DELETE + rebuild)</text>
+  <rect x="520" y="337" width="60" height="16" rx="4" fill="#1e3a2a"/>
+  <text x="550" y="349" text-anchor="middle" font-size="9" fill="#3fb950">✓ Done</text>
+
+  <!-- ITSM Worker -->
+  <rect x="730" y="222" width="200" height="140" rx="8" fill="#1c2433" stroke="#58a6ff44" stroke-width="1.5"/>
+  <rect x="730" y="222" width="200" height="26" rx="8" fill="#1a2a3f"/>
+  <rect x="730" y="236" width="200" height="12" fill="#1a2a3f"/>
+  <text x="830" y="239" text-anchor="middle" font-size="11" font-weight="700" fill="#58a6ff">ITSM Worker</text>
+  <text x="830" y="253" text-anchor="middle" font-size="9" fill="#8b949e">WORKER=itsm · Job (Complete)</text>
+  <line x1="740" y1="260" x2="920" y2="260" stroke="#30363d" stroke-width="1"/>
+  <text x="740" y="275" font-size="9" fill="#8b949e">→ incidents (873)</text>
+  <text x="740" y="288" font-size="9" fill="#8b949e">   (severity · status · dates)</text>
+  <text x="740" y="301" font-size="9" fill="#bc8cff">→ Neo4j Incident nodes</text>
+  <text x="740" y="314" font-size="9" fill="#bc8cff">   (l)-[:HAD_INCIDENT]->(i)</text>
+  <text x="740" y="327" font-size="9" fill="#8b949e">Runs after MDM completes</text>
+  <rect x="740" y="337" width="60" height="16" rx="4" fill="#1e3a2a"/>
+  <text x="770" y="349" text-anchor="middle" font-size="9" fill="#3fb950">✓ Done</text>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FASTAPI / DASHBOARD
+  ══════════════════════════════════════════════════════════════ -->
+  <rect x="290" y="395" width="640" height="255" rx="8" fill="#1c2433" stroke="#58a6ff77" stroke-width="2"/>
+  <rect x="290" y="395" width="640" height="28" rx="8" fill="#1a2a4a"/>
+  <rect x="290" y="411" width="640" height="12" fill="#1a2a4a"/>
+  <text x="610" y="413" text-anchor="middle" font-size="12" font-weight="700" fill="#58a6ff">FastAPI — Fleet Health Dashboard</text>
+  <text x="610" y="428" text-anchor="middle" font-size="9" fill="#8b949e">workplace-api:latest · Deployment (1 replica) · NodePort 30800</text>
+
+  <line x1="300" y1="435" x2="920" y2="435" stroke="#30363d" stroke-width="1"/>
+
+  <!-- Left col: API structure -->
+  <text x="310" y="452" font-size="10" font-weight="600" fill="#e6edf3">API Endpoints</text>
+  <text x="310" y="467" font-size="9" fill="#3fb950">GET /api/overview</text>
+  <text x="310" y="480" font-size="9" fill="#3fb950">GET /api/fleet/by-status  /by-os  /by-make</text>
+  <text x="310" y="493" font-size="9" fill="#3fb950">GET /api/security/risk-summary  /compliance</text>
+  <text x="310" y="506" font-size="9" fill="#3fb950">GET /api/incidents/summary  /recent  /trend</text>
+  <text x="310" y="519" font-size="9" fill="#bc8cff">GET /api/graph/dept-risk  /app-exposure</text>
+  <text x="310" y="535" font-size="9" fill="#8b949e">GET /health  · GET /docs (Swagger)</text>
+
+  <!-- Divider -->
+  <line x1="600" y1="437" x2="600" y2="638" stroke="#30363d" stroke-width="1"/>
+
+  <!-- Right col: tech stack -->
+  <text x="615" y="452" font-size="10" font-weight="600" fill="#e6edf3">Stack</text>
+  <text x="615" y="467" font-size="9" fill="#8b949e">FastAPI 0.111  +  Uvicorn (uvloop)</text>
+  <text x="615" y="480" font-size="9" fill="#8b949e">asyncpg 0.29   →  PostgreSQL</text>
+  <text x="615" y="493" font-size="9" fill="#8b949e">neo4j 5.18 async  →  Neo4j</text>
+  <text x="615" y="506" font-size="9" fill="#8b949e">Jinja2 templates  +  Chart.js</text>
+  <text x="615" y="519" font-size="9" fill="#8b949e">60s in-memory TTL cache</text>
+  <text x="615" y="535" font-size="9" fill="#d29922">envFrom: configMapRef: platform-config</text>
+
+  <!-- Dashboard preview box -->
+  <rect x="300" y="548" width="590" height="88" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="490" y="564" text-anchor="middle" font-size="9" fill="#8b949e">Dashboard  ·  http://localhost:8000</text>
+  <!-- mini stat cards -->
+  <rect x="310" y="570" width="68" height="28" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="344" y="582" text-anchor="middle" font-size="7" fill="#8b949e">Employees</text>
+  <text x="344" y="593" text-anchor="middle" font-size="10" font-weight="700" fill="#e6edf3">1,000</text>
+  <rect x="386" y="570" width="68" height="28" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="420" y="582" text-anchor="middle" font-size="7" fill="#8b949e">Encrypted</text>
+  <text x="420" y="593" text-anchor="middle" font-size="10" font-weight="700" fill="#3fb950">87.8%</text>
+  <rect x="462" y="570" width="68" height="28" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="496" y="582" text-anchor="middle" font-size="7" fill="#8b949e">Active Inc.</text>
+  <text x="496" y="593" text-anchor="middle" font-size="10" font-weight="700" fill="#f85149">253</text>
+  <rect x="538" y="570" width="68" height="28" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="572" y="582" text-anchor="middle" font-size="7" fill="#8b949e">AV OK</text>
+  <text x="572" y="593" text-anchor="middle" font-size="10" font-weight="700" fill="#d29922">75.6%</text>
+  <rect x="614" y="570" width="68" height="28" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="648" y="582" text-anchor="middle" font-size="7" fill="#8b949e">Warranty Exp</text>
+  <text x="648" y="593" text-anchor="middle" font-size="10" font-weight="700" fill="#d29922">705</text>
+  <rect x="690" y="570" width="78" height="28" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="729" y="582" text-anchor="middle" font-size="7" fill="#8b949e">Training Exp.</text>
+  <text x="729" y="593" text-anchor="middle" font-size="10" font-weight="700" fill="#f85149">82.5%</text>
+  <!-- chart sketches -->
+  <text x="310" y="624" font-size="8" fill="#30363d">▬▬▬ Status chart ▬▬▬ OS dist ▬▬▬ Incident trend ▬▬▬ Neo4j dept-risk ▬▬▬ App exposure ▬▬▬</text>
+
+  <!-- readiness probe tag -->
+  <rect x="780" y="615" width="100" height="16" rx="4" fill="#1c2f4a" stroke="#1f6feb44" stroke-width="1"/>
+  <text x="830" y="627" text-anchor="middle" font-size="8" fill="#58a6ff">readinessProbe /health</text>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ARROWS
+  ══════════════════════════════════════════════════════════════ -->
+
+  <!-- ConfigMap → Workers (dashed amber) -->
+  <line x1="274" y1="238" x2="290" y2="290" stroke="#d29922" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-amber)" opacity="0.6"/>
+  <line x1="274" y1="238" x2="510" y2="270" stroke="#d29922" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-amber)" opacity="0.6"/>
+  <line x1="274" y1="238" x2="730" y2="270" stroke="#d29922" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-amber)" opacity="0.6"/>
+  <!-- ConfigMap → API (dashed amber) -->
+  <line x1="274" y1="258" x2="295" y2="430" stroke="#d29922" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-amber)" opacity="0.6"/>
+
+  <!-- HR → PostgreSQL (green) -->
+  <line x1="390" y1="362" x2="220" y2="420" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+  <!-- MDM → PostgreSQL (green) -->
+  <line x1="530" y1="362" x2="240" y2="380" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <!-- MDM → Neo4j (purple) -->
+  <line x1="520" y1="362" x2="230" y2="492" stroke="#bc8cff" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+  <!-- ITSM → PostgreSQL (green) -->
+  <line x1="745" y1="362" x2="255" y2="390" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <!-- ITSM → Neo4j (purple) -->
+  <line x1="740" y1="362" x2="255" y2="530" stroke="#bc8cff" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+  <!-- API → PostgreSQL (green) -->
+  <line x1="310" y1="450" x2="250" y2="430" stroke="#3fb950" stroke-width="1.8" marker-end="url(#arr-green)"/>
+  <text x="268" y="443" font-size="8" fill="#3fb950" transform="rotate(-18,268,443)">asyncpg</text>
+
+  <!-- API → Neo4j (purple) -->
+  <line x1="310" y1="500" x2="255" y2="560" stroke="#bc8cff" stroke-width="1.8" marker-end="url(#arr-purple)"/>
+  <text x="265" y="530" font-size="8" fill="#bc8cff" transform="rotate(30,265,530)">neo4j async</text>
+
+  <!-- Browser → API (blue, from outside) -->
+  <line x1="610" y1="90" x2="610" y2="422" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arr-blue)"/>
+  <text x="620" y="116" font-size="9" fill="#58a6ff">Browser</text>
+  <text x="620" y="128" font-size="9" fill="#58a6ff">localhost:8000</text>
+
+  <!-- Execution order label -->
+  <text x="960" y="240" font-size="9" fill="#8b949e" text-anchor="middle">Execution order:</text>
+  <text x="960" y="254" font-size="9" fill="#58a6ff" text-anchor="middle">1 → HR</text>
+  <text x="960" y="267" font-size="9" fill="#58a6ff" text-anchor="middle">2 → MDM</text>
+  <text x="960" y="280" font-size="9" fill="#58a6ff" text-anchor="middle">3 → ITSM</text>
+  <text x="960" y="295" font-size="8" fill="#8b949e" text-anchor="middle">(sequential — each</text>
+  <text x="960" y="307" font-size="8" fill="#8b949e" text-anchor="middle">depends on prior)</text>
+</svg>
+
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:#3fb950"></div>PostgreSQL writes</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#bc8cff"></div>Neo4j writes</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#58a6ff"></div>HTTP / API traffic</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#d29922; opacity:.8"></div>ConfigMap injection (envFrom)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#1f6feb"></div>kind cluster boundary</div>
+</div>
+
+</body>
+</html>
