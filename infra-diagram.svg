@@ -1,0 +1,327 @@
+<svg viewBox="0 0 1080 850" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+<defs>
+  <!-- ═══ ICONS ═══ -->
+  <symbol id="ico-host" viewBox="0 0 32 32">
+    <rect x="4" y="4" width="24" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="4" y1="10" x2="28" y2="10" stroke="currentColor" stroke-width="1.2"/>
+    <circle cx="8" cy="7" r="1.2" fill="currentColor"/>
+    <circle cx="12" cy="7" r="1.2" fill="currentColor"/>
+    <rect x="11" y="21" width="10" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <line x1="7" y1="25" x2="25" y2="25" stroke="currentColor" stroke-width="1.8"/>
+  </symbol>
+  <symbol id="ico-k8s" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    <circle cx="16" cy="16" r="4"  fill="none" stroke="currentColor" stroke-width="1.6"/>
+    <line x1="16" y1="12" x2="16" y2="4"    stroke="currentColor" stroke-width="1.6"/>
+    <line x1="19.4" y1="13" x2="25.7" y2="9.4" stroke="currentColor" stroke-width="1.6"/>
+    <line x1="19.9" y1="17.4" x2="26.9" y2="21" stroke="currentColor" stroke-width="1.6"/>
+    <line x1="16" y1="20" x2="16" y2="28"   stroke="currentColor" stroke-width="1.6"/>
+    <line x1="12.6" y1="19" x2="6.3" y2="22.6" stroke="currentColor" stroke-width="1.6"/>
+    <line x1="12.1" y1="14.6" x2="5.1" y2="11" stroke="currentColor" stroke-width="1.6"/>
+    <line x1="13.2" y1="12.6" x2="9.6" y2="6.3" stroke="currentColor" stroke-width="1.6"/>
+  </symbol>
+  <symbol id="ico-db" viewBox="0 0 32 32">
+    <ellipse cx="16" cy="8"  rx="11" ry="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <ellipse cx="16" cy="24" rx="11" ry="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="5"  y1="8"  x2="5"  y2="24" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="27" y1="8"  x2="27" y2="24" stroke="currentColor" stroke-width="1.8"/>
+    <ellipse cx="16" cy="14" rx="11" ry="4" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2"/>
+  </symbol>
+  <symbol id="ico-graph" viewBox="0 0 32 32">
+    <circle cx="8"  cy="24" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <circle cx="24" cy="24" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <circle cx="16" cy="6"  r="5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="12" y1="21" x2="19" y2="9"  stroke="currentColor" stroke-width="1.5"/>
+    <line x1="20" y1="21" x2="13" y2="9"  stroke="currentColor" stroke-width="1.5"/>
+    <line x1="13" y1="24" x2="19" y2="24" stroke="currentColor" stroke-width="1.5"/>
+    <circle cx="16" cy="15" r="1.5" fill="currentColor"/>
+    <circle cx="11" cy="16" r="1.5" fill="currentColor"/>
+    <circle cx="21" cy="16" r="1.5" fill="currentColor"/>
+  </symbol>
+  <symbol id="ico-box" viewBox="0 0 32 32">
+    <rect x="4" y="6" width="24" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="4"  y1="13" x2="28" y2="13" stroke="currentColor" stroke-width="1.4"/>
+    <line x1="16" y1="6"  x2="16" y2="13" stroke="currentColor" stroke-width="1.4"/>
+    <line x1="10" y1="19" x2="22" y2="19" stroke="currentColor" stroke-width="1.2"/>
+    <line x1="10" y1="23" x2="18" y2="23" stroke="currentColor" stroke-width="1.2"/>
+  </symbol>
+  <symbol id="ico-api" viewBox="0 0 32 32">
+    <polygon points="19,3 10,17 16,17 13,29 22,15 16,15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="ico-browser" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <ellipse cx="16" cy="16" rx="6" ry="12" fill="none" stroke="currentColor" stroke-width="1.2"/>
+    <line x1="4"  y1="16" x2="28" y2="16" stroke="currentColor" stroke-width="1.2"/>
+    <line x1="6"  y1="10" x2="26" y2="10" stroke="currentColor" stroke-width="1"/>
+    <line x1="6"  y1="22" x2="26" y2="22" stroke="currentColor" stroke-width="1"/>
+  </symbol>
+  <symbol id="ico-config" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M16,3 L17.5,7 L20.8,5.2 L21.5,8.5 L25,8.5 L24,11.8 L27.5,13.5 L25.5,16 L27.5,18.5 L24,20.2 L25,23.5 L21.5,23.5 L20.8,26.8 L17.5,25 L16,29 L14.5,25 L11.2,26.8 L10.5,23.5 L7,23.5 L8,20.2 L4.5,18.5 L6.5,16 L4.5,13.5 L8,11.8 L7,8.5 L10.5,8.5 L11.2,5.2 L14.5,7 Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Arrow markers -->
+  <marker id="arr-green"    markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#3fb950"/></marker>
+  <marker id="arr-purple"   markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#bc8cff"/></marker>
+  <marker id="arr-blue"     markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#58a6ff"/></marker>
+  <marker id="arr-amber"    markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#d29922"/></marker>
+  <marker id="arr-green-r"  markerWidth="8" markerHeight="8" refX="1" refY="3" orient="auto"><path d="M8,0 L8,6 L0,3 z" fill="#3fb950"/></marker>
+  <marker id="arr-purple-r" markerWidth="8" markerHeight="8" refX="1" refY="3" orient="auto"><path d="M8,0 L8,6 L0,3 z" fill="#bc8cff"/></marker>
+</defs>
+
+<!-- Background -->
+<rect width="1080" height="850" fill="#0d1117"/>
+
+<!-- Title -->
+<text x="540" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#e6edf3">Mocked Workplace Data Platform</text>
+<text x="540" y="50" text-anchor="middle" font-size="11" fill="#8b949e">kind / Kubernetes · PostgreSQL · Neo4j · FastAPI · Python Workers</text>
+
+<!-- ── HOST MACHINE ── -->
+<rect x="8" y="60" width="1064" height="782" rx="16" fill="#0f1218" stroke="#30363d" stroke-width="1.5"/>
+<use href="#ico-host" x="22" y="68" width="22" height="22" color="#8b949e"/>
+<text x="50" y="84" font-size="12" font-weight="600" fill="#8b949e" letter-spacing="0.8">HOST MACHINE · Linux · Docker · kubectl</text>
+
+<!-- ── KIND CLUSTER ── -->
+<rect x="22" y="96" width="1038" height="738" rx="12" fill="#0d1117" stroke="#1f6feb" stroke-width="1.5" stroke-dasharray="8 4"/>
+<use href="#ico-k8s" x="30" y="102" width="20" height="20" color="#1f6feb"/>
+<text x="56" y="117" font-size="12" font-weight="600" fill="#1f6feb" letter-spacing="0.6">KIND CLUSTER · workplace-platform</text>
+
+<!-- Port mapping strip -->
+<rect x="36" y="128" width="1010" height="26" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="56"  y="145" font-size="10" fill="#8b949e">Port Mappings:</text>
+<text x="160" y="145" font-size="10" fill="#3fb950">localhost:5433 → postgres:5432</text>
+<text x="360" y="145" font-size="10" fill="#bc8cff">localhost:7475 → neo4j:7474 (browser)  ·  localhost:7688 → neo4j:7687 (bolt)</text>
+<text x="730" y="145" font-size="10" fill="#58a6ff">localhost:8000 → api:8000 (dashboard)</text>
+
+<!-- ── NAMESPACE ── -->
+<rect x="36" y="162" width="1014" height="660" rx="10" fill="#0d1117" stroke="#388bfd33" stroke-width="1.5"/>
+<text x="54" y="182" font-size="11" font-weight="600" fill="#388bfd88" letter-spacing="0.8">namespace: workplace</text>
+
+<!-- ── CONFIGMAP ── -->
+<rect x="380" y="192" width="320" height="66" rx="10" fill="#1f1a0f" stroke="#d2992266" stroke-width="1.8"/>
+<use href="#ico-config" x="396" y="204" width="28" height="28" color="#d29922"/>
+<text x="434" y="218" font-size="13" font-weight="700" fill="#d29922">ConfigMap</text>
+<text x="434" y="232" font-size="10" fill="#8b949e">platform-config</text>
+<text x="540" y="248" text-anchor="middle" font-size="9" fill="#8b949e">PG_DSN · NEO4J_URI · NEO4J_USER · NEO4J_PASS · N_EMPLOYEES=1000</text>
+
+<!-- ── SECTION LABELS ── -->
+<text x="190" y="285" text-anchor="middle" font-size="10" font-weight="600" fill="#58a6ff66" letter-spacing="1">INGESTION JOBS</text>
+<text x="190" y="297" text-anchor="middle" font-size="9" fill="#8b949e">workplace-ingestion:latest</text>
+<text x="508" y="285" text-anchor="middle" font-size="10" font-weight="600" fill="#8b949e55" letter-spacing="1">DATA STORES</text>
+<text x="855" y="285" text-anchor="middle" font-size="10" font-weight="600" fill="#8b949e55" letter-spacing="1">API + DASHBOARD</text>
+
+<!-- ── HR WORKER ── -->
+<rect x="56" y="306" width="268" height="138" rx="10" fill="#111825" stroke="#58a6ff44" stroke-width="1.8"/>
+<rect x="56" y="306" width="268" height="36" rx="10" fill="#162035"/>
+<rect x="56" y="330" width="268" height="12" fill="#162035"/>
+<use href="#ico-box" x="70" y="312" width="24" height="24" color="#58a6ff"/>
+<text x="102" y="327" font-size="13" font-weight="700" fill="#58a6ff">HR Worker</text>
+<text x="102" y="339" font-size="9" fill="#8b949e">Job · WORKER=hr · Mimics Workday</text>
+<text x="70" y="362" font-size="10" fill="#e6edf3">→ 15 departments</text>
+<text x="70" y="377" font-size="10" fill="#e6edf3">→ 1,000 employees</text>
+<text x="70" y="392" font-size="10" fill="#e6edf3">→ 20 training courses</text>
+<text x="70" y="407" font-size="10" fill="#e6edf3">→ 7,419 training records</text>
+<text x="70" y="422" font-size="9" fill="#3fb950">→ bootstrap schema (CREATE TABLE)</text>
+<rect x="218" y="410" width="66" height="18" rx="5" fill="#1e3a2a"/>
+<text x="251" y="423" text-anchor="middle" font-size="9" font-weight="600" fill="#3fb950">✓ Complete</text>
+
+<!-- ── MDM WORKER ── -->
+<rect x="56" y="462" width="268" height="148" rx="10" fill="#111825" stroke="#58a6ff44" stroke-width="1.8"/>
+<rect x="56" y="462" width="268" height="36" rx="10" fill="#162035"/>
+<rect x="56" y="486" width="268" height="12" fill="#162035"/>
+<use href="#ico-box" x="70" y="468" width="24" height="24" color="#58a6ff"/>
+<text x="102" y="483" font-size="13" font-weight="700" fill="#58a6ff">MDM Worker</text>
+<text x="102" y="495" font-size="9" fill="#8b949e">Job · WORKER=mdm · Mimics Jamf</text>
+<text x="70" y="518" font-size="10" fill="#e6edf3">→ 24 applications</text>
+<text x="70" y="533" font-size="10" fill="#e6edf3">→ 1,000 laptops + metrics</text>
+<text x="70" y="548" font-size="10" fill="#e6edf3">→ 11,002 app installs</text>
+<text x="70" y="563" font-size="10" fill="#bc8cff">→ Neo4j full graph sync</text>
+<text x="70" y="578" font-size="9" fill="#8b949e">   (DETACH DELETE → rebuild)</text>
+<rect x="218" y="566" width="66" height="18" rx="5" fill="#1e3a2a"/>
+<text x="251" y="579" text-anchor="middle" font-size="9" font-weight="600" fill="#3fb950">✓ Complete</text>
+
+<!-- ── ITSM WORKER ── -->
+<rect x="56" y="628" width="268" height="138" rx="10" fill="#111825" stroke="#58a6ff44" stroke-width="1.8"/>
+<rect x="56" y="628" width="268" height="36" rx="10" fill="#162035"/>
+<rect x="56" y="652" width="268" height="12" fill="#162035"/>
+<use href="#ico-box" x="70" y="634" width="24" height="24" color="#58a6ff"/>
+<text x="102" y="649" font-size="13" font-weight="700" fill="#58a6ff">ITSM Worker</text>
+<text x="102" y="661" font-size="9" fill="#8b949e">Job · WORKER=itsm · Mimics ServiceNow</text>
+<text x="70" y="684" font-size="10" fill="#e6edf3">→ 873 incidents</text>
+<text x="70" y="699" font-size="10" fill="#e6edf3">   (type · severity · status · dates)</text>
+<text x="70" y="714" font-size="10" fill="#bc8cff">→ Neo4j Incident nodes</text>
+<text x="70" y="729" font-size="10" fill="#bc8cff">   (Laptop)-[:HAD_INCIDENT]→(Incident)</text>
+<rect x="218" y="736" width="66" height="18" rx="5" fill="#1e3a2a"/>
+<text x="251" y="749" text-anchor="middle" font-size="9" font-weight="600" fill="#3fb950">✓ Complete</text>
+
+<!-- Execution order -->
+<rect x="56" y="782" width="268" height="24" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="190" y="798" text-anchor="middle" font-size="9" fill="#58a6ff">Run order: ① HR  →  ② MDM  →  ③ ITSM</text>
+
+<!-- ── POSTGRESQL ── -->
+<rect x="368" y="306" width="280" height="276" rx="10" fill="#101a12" stroke="#3fb95066" stroke-width="2"/>
+<rect x="368" y="306" width="280" height="42" rx="10" fill="#152318"/>
+<rect x="368" y="336" width="280" height="12" fill="#152318"/>
+<use href="#ico-db" x="382" y="312" width="30" height="30" color="#3fb950"/>
+<text x="422" y="330" font-size="14" font-weight="700" fill="#3fb950">PostgreSQL</text>
+<text x="422" y="344" font-size="9" fill="#8b949e">bitnami/postgresql · StatefulSet</text>
+<text x="382" y="365" font-size="9" fill="#8b949e">postgres-postgresql.workplace:5432</text>
+<line x1="376" y1="372" x2="638" y2="372" stroke="#30363d" stroke-width="1"/>
+<text x="382" y="390" font-size="10" fill="#8b949e">Table</text>
+<text x="636" y="390" text-anchor="end" font-size="10" fill="#8b949e">Records</text>
+<line x1="376" y1="396" x2="638" y2="396" stroke="#30363d" stroke-width="0.5"/>
+<rect x="376" y="399" width="260" height="18" rx="3" fill="#0d150f"/>
+<text x="382" y="412" font-size="10" fill="#e6edf3">employees</text>
+<text x="636" y="412" text-anchor="end" font-size="10" font-weight="600" fill="#3fb950">1,000</text>
+<text x="382" y="432" font-size="10" fill="#e6edf3">departments</text>
+<text x="636" y="432" text-anchor="end" font-size="10" font-weight="600" fill="#3fb950">15</text>
+<rect x="376" y="436" width="260" height="18" rx="3" fill="#0d150f"/>
+<text x="382" y="449" font-size="10" fill="#e6edf3">laptops + metrics</text>
+<text x="636" y="449" text-anchor="end" font-size="10" font-weight="600" fill="#3fb950">1,000</text>
+<text x="382" y="469" font-size="10" fill="#e6edf3">applications</text>
+<text x="636" y="469" text-anchor="end" font-size="10" font-weight="600" fill="#3fb950">24</text>
+<rect x="376" y="473" width="260" height="18" rx="3" fill="#0d150f"/>
+<text x="382" y="486" font-size="10" fill="#e6edf3">laptop_applications</text>
+<text x="636" y="486" text-anchor="end" font-size="10" font-weight="600" fill="#3fb950">11,002</text>
+<text x="382" y="506" font-size="10" fill="#e6edf3">incidents</text>
+<text x="636" y="506" text-anchor="end" font-size="10" font-weight="600" fill="#3fb950">873</text>
+<rect x="376" y="510" width="260" height="18" rx="3" fill="#0d150f"/>
+<text x="382" y="523" font-size="10" fill="#e6edf3">employee_training</text>
+<text x="636" y="523" text-anchor="end" font-size="10" font-weight="600" fill="#3fb950">7,419</text>
+<text x="382" y="543" font-size="10" fill="#e6edf3">training_courses</text>
+<text x="636" y="543" text-anchor="end" font-size="10" font-weight="600" fill="#3fb950">20</text>
+<line x1="376" y1="550" x2="638" y2="550" stroke="#30363d" stroke-width="0.5"/>
+<text x="382" y="563" font-size="9" fill="#8b949e">Relational · ACID · FK constraints</text>
+
+<!-- ── NEO4J ── -->
+<rect x="368" y="600" width="280" height="214" rx="10" fill="#130f1e" stroke="#bc8cff55" stroke-width="2"/>
+<rect x="368" y="600" width="280" height="42" rx="10" fill="#1e1230"/>
+<rect x="368" y="630" width="280" height="12" fill="#1e1230"/>
+<use href="#ico-graph" x="382" y="606" width="30" height="30" color="#bc8cff"/>
+<text x="422" y="624" font-size="14" font-weight="700" fill="#bc8cff">Neo4j</text>
+<text x="422" y="638" font-size="9" fill="#8b949e">neo4j/neo4j · community · StatefulSet</text>
+<text x="382" y="660" font-size="9" fill="#8b949e">bolt://neo4j.workplace:7687  ·  Browser: :7475</text>
+<line x1="376" y1="667" x2="638" y2="667" stroke="#30363d" stroke-width="1"/>
+<text x="382" y="685" font-size="10" font-weight="600" fill="#e6edf3">Node Labels</text>
+<text x="382" y="700" font-size="10" fill="#bc8cff">Employee · Laptop · Department · Office</text>
+<text x="382" y="715" font-size="10" fill="#bc8cff">Application · Incident</text>
+<line x1="376" y1="723" x2="638" y2="723" stroke="#30363d" stroke-width="1"/>
+<text x="382" y="739" font-size="10" font-weight="600" fill="#e6edf3">Relationships</text>
+<text x="382" y="754" font-size="10" fill="#bc8cff">WORKS_IN · ASSIGNED_TO · BASED_IN</text>
+<text x="382" y="769" font-size="10" fill="#bc8cff">HAS_INSTALLED · HAD_INCIDENT</text>
+<text x="382" y="786" font-size="9" fill="#8b949e">Graph traversal · Cypher queries</text>
+
+<!-- ── FASTAPI ── -->
+<rect x="680" y="306" width="350" height="360" rx="10" fill="#0f1c25" stroke="#58a6ff77" stroke-width="2"/>
+<rect x="680" y="306" width="350" height="42" rx="10" fill="#112233"/>
+<rect x="680" y="336" width="350" height="12" fill="#112233"/>
+<use href="#ico-api" x="694" y="312" width="28" height="28" color="#58a6ff"/>
+<text x="732" y="330" font-size="14" font-weight="700" fill="#58a6ff">FastAPI</text>
+<text x="732" y="344" font-size="9" fill="#8b949e">Deployment · 1 replica · NodePort 30800</text>
+<text x="694" y="366" font-size="9" fill="#8b949e">uvicorn · asyncpg · neo4j async · jinja2 · chart.js</text>
+<line x1="688" y1="374" x2="1022" y2="374" stroke="#30363d" stroke-width="1"/>
+<text x="694" y="392" font-size="10" font-weight="600" fill="#e6edf3">Endpoints</text>
+<text x="694" y="409" font-size="9" fill="#3fb950">GET  /api/overview</text>
+<text x="694" y="424" font-size="9" fill="#3fb950">GET  /api/fleet/by-status  /by-os  /by-make</text>
+<text x="694" y="439" font-size="9" fill="#3fb950">GET  /api/security/risk-summary  /compliance</text>
+<text x="694" y="454" font-size="9" fill="#3fb950">GET  /api/incidents/summary  /recent  /trend</text>
+<text x="694" y="469" font-size="9" fill="#bc8cff">GET  /api/graph/dept-risk  /app-exposure  ← Neo4j</text>
+<text x="694" y="484" font-size="9" fill="#8b949e">GET  /health   GET /docs (Swagger UI)</text>
+<line x1="688" y1="493" x2="1022" y2="493" stroke="#30363d" stroke-width="1"/>
+<text x="855" y="510" text-anchor="middle" font-size="10" font-weight="600" fill="#e6edf3">Dashboard · http://localhost:8000</text>
+<rect x="694" y="518" width="316" height="110" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+<!-- mini stat cards -->
+<rect x="702" y="526" width="58" height="30" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="731" y="539" text-anchor="middle" font-size="7" fill="#8b949e">Employees</text>
+<text x="731" y="551" text-anchor="middle" font-size="10" font-weight="700" fill="#e6edf3">1,000</text>
+<rect x="766" y="526" width="58" height="30" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="795" y="539" text-anchor="middle" font-size="7" fill="#8b949e">Encrypted</text>
+<text x="795" y="551" text-anchor="middle" font-size="10" font-weight="700" fill="#3fb950">87.8%</text>
+<rect x="830" y="526" width="58" height="30" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="859" y="539" text-anchor="middle" font-size="7" fill="#8b949e">Active Inc.</text>
+<text x="859" y="551" text-anchor="middle" font-size="10" font-weight="700" fill="#f85149">253</text>
+<rect x="894" y="526" width="58" height="30" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="923" y="539" text-anchor="middle" font-size="7" fill="#8b949e">AV Status</text>
+<text x="923" y="551" text-anchor="middle" font-size="10" font-weight="700" fill="#d29922">75.6%</text>
+<rect x="958" y="526" width="44" height="30" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="980" y="539" text-anchor="middle" font-size="7" fill="#8b949e">Risk Hi</text>
+<text x="980" y="551" text-anchor="middle" font-size="10" font-weight="700" fill="#f85149">71</text>
+<!-- mini charts -->
+<rect x="702" y="562" width="316" height="58" rx="4" fill="#161b22"/>
+<rect x="710" y="578" width="10" height="34" rx="2" fill="#3fb95044"/>
+<rect x="724" y="586" width="10" height="26" rx="2" fill="#58a6ff44"/>
+<rect x="738" y="590" width="10" height="22" rx="2" fill="#d2992244"/>
+<rect x="752" y="584" width="10" height="28" rx="2" fill="#3fb95044"/>
+<rect x="766" y="593" width="10" height="19" rx="2" fill="#bc8cff44"/>
+<polyline points="800,608 814,598 828,602 842,589 856,594 870,580 884,584" fill="none" stroke="#58a6ff" stroke-width="1.5" opacity="0.6"/>
+<circle cx="952" cy="591" r="14" fill="none" stroke="#3fb950" stroke-width="6" stroke-dasharray="52 36" transform="rotate(-90 952 591)" opacity="0.5"/>
+<circle cx="952" cy="591" r="14" fill="none" stroke="#d29922" stroke-width="6" stroke-dasharray="22 66" stroke-dashoffset="-52" transform="rotate(-90 952 591)" opacity="0.5"/>
+<rect x="694" y="636" width="150" height="20" rx="5" fill="#1c2433" stroke="#30363d" stroke-width="1"/>
+<text x="769" y="650" text-anchor="middle" font-size="9" fill="#8b949e">60s TTL cache</text>
+<rect x="852" y="636" width="142" height="20" rx="5" fill="#1c2433" stroke="#d2992244" stroke-width="1"/>
+<text x="923" y="650" text-anchor="middle" font-size="9" fill="#d29922">envFrom: platform-config</text>
+
+<!-- ── BROWSER ── -->
+<rect x="688" y="684" width="322" height="76" rx="10" fill="#111827" stroke="#8b949e44" stroke-width="1.5" stroke-dasharray="5 3"/>
+<use href="#ico-browser" x="704" y="696" width="28" height="28" color="#8b949e"/>
+<text x="742" y="712" font-size="13" font-weight="700" fill="#8b949e">Browser</text>
+<text x="742" y="726" font-size="10" fill="#8b949e">http://localhost:8000</text>
+<text x="704" y="748" font-size="9" fill="#58a6ff">Fleet Health Dashboard  ·  Swagger UI at /docs</text>
+
+<!-- ── LEGEND ── -->
+<rect x="36" y="824" width="1014" height="28" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<line x1="72"  y1="838" x2="96"  y2="838" stroke="#3fb950" stroke-width="2"/>
+<text x="100" y="842" font-size="9" fill="#8b949e">PostgreSQL write/read</text>
+<line x1="236" y1="838" x2="260" y2="838" stroke="#bc8cff" stroke-width="2"/>
+<text x="264" y="842" font-size="9" fill="#8b949e">Neo4j write/read</text>
+<line x1="380" y1="838" x2="404" y2="838" stroke="#58a6ff" stroke-width="2"/>
+<text x="408" y="842" font-size="9" fill="#8b949e">HTTP (browser → API)</text>
+<line x1="540" y1="838" x2="564" y2="838" stroke="#d29922" stroke-width="1.5" stroke-dasharray="4 2"/>
+<text x="568" y="842" font-size="9" fill="#8b949e">ConfigMap env injection</text>
+<line x1="700" y1="838" x2="724" y2="838" stroke="#1f6feb" stroke-width="1.5" stroke-dasharray="6 3"/>
+<text x="728" y="842" font-size="9" fill="#8b949e">kind cluster boundary</text>
+
+<!-- ── ARROWS ── -->
+<!-- ConfigMap → workers (amber dashed) -->
+<line x1="380" y1="240" x2="195" y2="306" stroke="#d29922" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr-amber)" opacity="0.65"/>
+<line x1="380" y1="248" x2="195" y2="462" stroke="#d29922" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr-amber)" opacity="0.5"/>
+<line x1="380" y1="254" x2="195" y2="628" stroke="#d29922" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr-amber)" opacity="0.4"/>
+<!-- ConfigMap → FastAPI (amber dashed) -->
+<line x1="700" y1="240" x2="800" y2="306" stroke="#d29922" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr-amber)" opacity="0.65"/>
+<text x="308" y="246" font-size="9" fill="#d29922" opacity="0.8">env inject</text>
+<text x="736" y="278" font-size="9" fill="#d29922" opacity="0.8">env inject</text>
+
+<!-- HR → PostgreSQL -->
+<line x1="324" y1="375" x2="368" y2="400" stroke="#3fb950" stroke-width="2" marker-end="url(#arr-green)"/>
+<text x="330" y="392" font-size="9" fill="#3fb950">SQL</text>
+
+<!-- MDM → PostgreSQL -->
+<line x1="324" y1="530" x2="368" y2="468" stroke="#3fb950" stroke-width="2" marker-end="url(#arr-green)"/>
+<text x="330" y="510" font-size="9" fill="#3fb950">SQL</text>
+
+<!-- MDM → Neo4j -->
+<line x1="324" y1="548" x2="368" y2="648" stroke="#bc8cff" stroke-width="2" marker-end="url(#arr-purple)"/>
+<text x="328" y="600" font-size="9" fill="#bc8cff">Graph</text>
+
+<!-- ITSM → PostgreSQL -->
+<line x1="324" y1="665" x2="368" y2="538" stroke="#3fb950" stroke-width="2" marker-end="url(#arr-green)"/>
+<text x="330" y="628" font-size="9" fill="#3fb950">SQL</text>
+
+<!-- ITSM → Neo4j -->
+<line x1="324" y1="700" x2="368" y2="720" stroke="#bc8cff" stroke-width="2" marker-end="url(#arr-purple)"/>
+<text x="328" y="714" font-size="9" fill="#bc8cff">Graph</text>
+
+<!-- FastAPI ↔ PostgreSQL -->
+<line x1="680" y1="430" x2="648" y2="448" stroke="#3fb950" stroke-width="2" marker-end="url(#arr-green)" marker-start="url(#arr-green-r)"/>
+<text x="644" y="432" font-size="8" fill="#3fb950" text-anchor="end">asyncpg</text>
+<text x="644" y="442" font-size="8" fill="#3fb950" text-anchor="end">read</text>
+
+<!-- FastAPI ↔ Neo4j -->
+<line x1="680" y1="480" x2="648" y2="672" stroke="#bc8cff" stroke-width="2" marker-end="url(#arr-purple)" marker-start="url(#arr-purple-r)"/>
+<text x="642" y="576" font-size="8" fill="#bc8cff" text-anchor="end">neo4j</text>
+<text x="642" y="586" font-size="8" fill="#bc8cff" text-anchor="end">async read</text>
+
+<!-- Browser → FastAPI -->
+<line x1="849" y1="684" x2="849" y2="666" stroke="#58a6ff" stroke-width="2" marker-end="url(#arr-blue)"/>
+<text x="858" y="678" font-size="9" fill="#58a6ff">HTTP :8000</text>
+</svg>
