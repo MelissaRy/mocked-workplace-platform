@@ -4,7 +4,7 @@ from db import lifespan
 import db
 from routers import overview, fleet, security, incidents, graph
 
-app = FastAPI(title="Workplace Fleet Health API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="Mocked Workplace Fleet Health API", version="1.0.0", lifespan=lifespan)
 
 templates = Jinja2Templates(directory="templates")
 
