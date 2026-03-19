@@ -9,10 +9,10 @@ from neo4j import GraphDatabase
 
 # ── connection ────────────────────────────────────────────────────────────────
 
-PG_DSN = os.getenv("PG_DSN", "postgresql://workplace:__REDACTED__@localhost:5433/workplace_db")
-NEO4J_URI  = os.getenv("NEO4J_URI",  "bolt://localhost:7688")
-NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
-NEO4J_PASS = os.getenv("NEO4J_PASS", "__REDACTED__")
+PG_DSN     = os.environ["PG_DSN"]
+NEO4J_URI  = os.environ["NEO4J_URI"]
+NEO4J_USER = os.environ["NEO4J_USER"]
+NEO4J_PASS = os.environ["NEO4J_PASS"]
 
 def pg_conn():
     return psycopg2.connect(PG_DSN)
