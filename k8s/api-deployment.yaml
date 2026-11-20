@@ -14,15 +14,38 @@ spec:
       labels:
         app: workplace-api
     spec:
+      # Nothing in this pod needs a Kubernetes API token.
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: api
           image: workplace-api:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 8000
+          # Non-sensitive settings from the ConfigMap; credentials from the
+          # Secret. Split deliberately — see configmap.yaml.
           envFrom:
             - configMapRef:
                 name: platform-config
+            - secretRef:
+                name: platform-secrets
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          # The image is read-only at runtime, so anything needing scratch
+          # space gets an explicit ephemeral mount.
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           readinessProbe:
             httpGet:
               path: /health
@@ -42,6 +65,9 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
+      volumes:
+        - name: tmp
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

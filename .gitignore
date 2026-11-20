@@ -1,14 +1,44 @@
-__pycache__/
-*.pyc
-*.pyo
-
-# env files — never commit real credentials
+# ── Secrets & credentials ────────────────────────────────────────────────────
 .env
 .env.local
 .env.*.local
 .env.development
 .env.production
 .env.test
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials.json
 
-# Helm values contain passwords — keep local only
+# Helm values and the real Secret manifest carry passwords — local only.
+# k8s/secret.example.yaml is the committed template.
 helm/
+k8s/secret.yaml
+kubeconfig*
+
+# ── Local agent / tool state ─────────────────────────────────────────────────
+.claude/
+.cursor/
+.aider*
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ── OS / IDE ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
